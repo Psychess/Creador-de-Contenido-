@@ -34,16 +34,16 @@ app.use(helmet({
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? [process.env.FRONTEND_URL]
+  origin: config.NODE_ENV === 'production' 
+    ? [config.FRONTEND_URL].filter(Boolean)
     : ['http://localhost:3000', 'http://127.0.0.1:3000'],
   credentials: true,
 }));
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'), // 15 minutes
-  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'), // limit each IP to 100 requests per windowMs
+  windowMs: config.RATE_LIMIT_WINDOW_MS,
+  max: config.RATE_LIMIT_MAX_REQUESTS,
   message: {
     error: 'Too many requests from this IP, please try again later.',
   },
@@ -103,11 +103,11 @@ process.on('SIGINT', () => {
 });
 
 // Start server
-const PORT = config.port || 3001;
+const PORT = config.PORT || 3001;
 
 app.listen(PORT, () => {
   logger.info(`🚀 TrendCraft Studio API server running on port ${PORT}`);
-  logger.info(`🌍 Environment: ${config.nodeEnv}`);
+  logger.info(`🌍 Environment: ${config.NODE_ENV}`);
   logger.info(`📚 API Documentation: http://localhost:${PORT}/api/docs`);
 });
 

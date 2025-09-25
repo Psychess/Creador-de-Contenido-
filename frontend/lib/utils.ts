@@ -50,7 +50,7 @@ export function slugify(text: string): string {
     .replace(/[^a-z0-9 -]/g, '')
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
-    .trim('-');
+    .replace(/^-+|-+$/g, '');
 }
 
 export function capitalizeFirst(text: string): string {
@@ -155,7 +155,7 @@ export function groupBy<T, K extends string | number | symbol>(
 }
 
 export function unique<T>(array: T[]): T[] {
-  return [...new Set(array)];
+  return Array.from(new Set(array));
 }
 
 export function sleep(ms: number): Promise<void> {
